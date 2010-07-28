@@ -77,7 +77,7 @@ module Maptastic
     
     def map_input(methods, options = {})
       options[:hint] ||= "Click to select a location, then drag the marker to position"
-      inputs_html = methods.inject('') {|html, method| html << input(method)}
+      inputs_html = methods.inject('') {|html, method| html << input(method, :as => :hidden)}
       hint_html = inline_hints_for(methods.first, options)
       map_html = @template.content_tag(:li, @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods)) << hint_html.to_s << map_js(methods).to_s)
       
