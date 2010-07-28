@@ -24,6 +24,20 @@ module Maptastic
     def map_js(methods)
       "
       <script lang='javascript'>
+        function create_marker(map, location) {
+          marker = new google.maps.Marker({
+            position: location, 
+            map: map,
+            title:'Drag to reposition',
+            draggable: true
+          });
+          
+          google.maps.event.addListener(marker, 'dragend', function(event){
+            document.getElementById('#{map_input_id(methods.first)}').value = event.latLng.lat();
+            document.getElementById('#{map_input_id(methods.last)}').value = event.latLng.lng();
+          });
+        }
+      
         function init_#{map_div_id(methods)}() {
           var myOptions = {
             zoom: 6,
@@ -41,24 +55,19 @@ module Maptastic
             );
           }
           
-          click_listener = google.maps.event.addListener(map, 'click', function(event){
-            marker = new google.maps.Marker({
-              position: event.latLng, 
-              map: map,
-              title:'Drag to reposition',
-              draggable: true
+          if (document.getElementById('#{map_input_id(methods.first)}').value && document.getElementById('#{map_input_id(methods.last)}').value) {
+            var location = new google.maps.LatLng(document.getElementById('#{map_input_id(methods.first)}').value, document.getElementById('#{map_input_id(methods.last)}').value);
+            create_marker(map, location);
+          } else {
+            click_listener = google.maps.event.addListener(map, 'click', function(event){
+              create_marker(map, event.latLng);
+              
+              document.getElementById('#{map_input_id(methods.first)}').value = location.lat();
+              document.getElementById('#{map_input_id(methods.last)}').value = location.lng();
+              
+              google.maps.event.removeListener(click_listener);
             });
-            
-            google.maps.event.removeListener(click_listener);
-            document.getElementById('#{map_input_id(methods.first)}').value = event.latLng.lat();
-            document.getElementById('#{map_input_id(methods.last)}').value = event.latLng.lng();
-            
-            google.maps.event.addListener(marker, 'dragend', function(event){
-              document.getElementById('#{map_input_id(methods.first)}').value = event.latLng.lat();
-              document.getElementById('#{map_input_id(methods.last)}').value = event.latLng.lng();
-            });
-          });
-          
+          }
         }
         
         init_#{map_div_id(methods)}();
@@ -67,7 +76,7 @@ module Maptastic
     
     def map_input(methods, options = {})
       options[:hint] ||= "Click to select a location, then drag the marker to position"
-      inputs_html = methods.inject('') {|html, method| html << input(method, :as => :hidden)}
+      inputs_html = methods.inject('') {|html, method| html << input(method)}
       hint_html = inline_hints_for(methods.first, options)
       map_html = @template.content_tag(:li, @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods)) << hint_html.to_s << map_js(methods).to_s)
       
