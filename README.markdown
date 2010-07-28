@@ -38,3 +38,4 @@ Copyright © 2010 [Matthew Hall][2], released under the MIT license.
 
 [1]:http://github.com/justinfrench/formtastic
 [2]:http://codebeef.com
+[3]:http://code.google.com/apis/maps/documentation/javascript/
