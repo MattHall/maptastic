@@ -28,9 +28,9 @@ Note that the map input expects two parameters - a latitude and longitude. The o
 
 This plugin is under development. It's pretty simple, and patches are very welcome.
 
-The Repo is available on GitHub: http://github.com/MattHall/maptastic
+[The Repo is available on GitHub][5]
 
-Report bugs here: https://matt.purifyapp.com/projects/maptastic/issues
+[Report bugs here][4]
 
 ## Project Info
 
@@ -39,3 +39,5 @@ Copyright © 2010 [Matthew Hall][2], released under the MIT license.
 [1]:http://github.com/justinfrench/formtastic
 [2]:http://codebeef.com
 [3]:http://code.google.com/apis/maps/documentation/javascript/
+[4]:https://matt.purifyapp.com/projects/maptastic/issues
+[5]:http://github.com/MattHall/maptastic
