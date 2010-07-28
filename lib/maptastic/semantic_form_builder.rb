@@ -36,12 +36,7 @@ module Maptastic
               browserSupportFlag = true;
               navigator.geolocation.getCurrentPosition(function(position) {
                 initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-                contentString = 'Location found using W3C standard';
                 map.setCenter(initialLocation);
-                infowindow.setContent(contentString);
-                infowindow.setPosition(initialLocation);
-                infowindow.open(map);
-              }, function() {
               }
             );
           }
@@ -50,7 +45,7 @@ module Maptastic
             marker = new google.maps.Marker({
               position: event.latLng, 
               map: map,
-              title:'Hello World!',
+              title:'Drag to reposition',
               draggable: true
             });
             
@@ -71,8 +66,10 @@ module Maptastic
     end
     
     def map_input(methods, options = {})
-      inputs_html = methods.inject('') {|html, method| html << input(method)}
-      map_html = @template.content_tag(:li, @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods)) << map_js(methods))
+      options[:hint] ||= "Click to select a location, then drag the marker to position"
+      inputs_html = methods.inject('') {|html, method| html << input(method, :as => :hidden)}
+      hint_html = inline_hints_for(methods.first, options)
+      map_html = @template.content_tag(:li, @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods)) << hint_html.to_s << map_js(methods).to_s)
       
       inputs_html + map_html
     end
