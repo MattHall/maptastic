@@ -46,19 +46,20 @@ module Maptastic
           
           map = new google.maps.Map(document.getElementById('#{map_div_id(methods)}'), myOptions);
           
-          if(navigator.geolocation) {
-              browserSupportFlag = true;
-              navigator.geolocation.getCurrentPosition(function(position) {
-                initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-                map.setCenter(initialLocation);
-              }
-            );
-          }
-          
           if (document.getElementById('#{map_input_id(methods.first)}').value && document.getElementById('#{map_input_id(methods.last)}').value) {
             var location = new google.maps.LatLng(document.getElementById('#{map_input_id(methods.first)}').value, document.getElementById('#{map_input_id(methods.last)}').value);
+            map.setCenter(location);
             create_marker(map, location);
           } else {
+            if(navigator.geolocation) {
+                browserSupportFlag = true;
+                navigator.geolocation.getCurrentPosition(function(position) {
+                  initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+                  map.setCenter(initialLocation);
+                }
+              );
+            }
+            
             click_listener = google.maps.event.addListener(map, 'click', function(event){
               create_marker(map, event.latLng);
               
