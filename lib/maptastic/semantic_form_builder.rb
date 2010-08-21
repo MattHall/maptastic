@@ -22,8 +22,8 @@ module Maptastic
     end
     
     def map_js(methods)
+      @template.content_tag("script", :lang => "javascript") do
       "
-      <script lang='javascript'>
         function create_marker(map, location) {
           marker = new google.maps.Marker({
             position: location, 
@@ -72,16 +72,18 @@ module Maptastic
         }
         
         init_#{map_div_id(methods)}();
-      </script>"
+        "
+      end
     end
     
     def map_input(methods, options = {})
       options[:hint] ||= "Click to select a location, then drag the marker to position"
       inputs_html = methods.inject('') {|html, method| html << input(method, :as => :hidden)}
       hint_html = inline_hints_for(methods.first, options)
-      map_html = @template.content_tag(:li, @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods)) << hint_html.to_s << map_js(methods).to_s)
+      map_container = @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods))
+      map_html = @template.content_tag(:li,  Formtastic::Util.html_safe("#{map_container} #{hint_html.to_s} #{options[:skip_js] == true ? '' : map_js(methods).to_s}"))
       
-      inputs_html + map_html
+      Formtastic::Util.html_safe(inputs_html + map_html)
     end
 
   end
