@@ -18,7 +18,7 @@ module Maptastic
     end
     
     def map_input_id(method)
-      "#{@object.class.to_s.underscore}_#{method.to_s}"
+      generate_html_id("map_#{method}")
     end
     
     def map_js(methods)
@@ -78,7 +78,7 @@ module Maptastic
     
     def map_input(methods, options = {})
       options[:hint] ||= "Click to select a location, then drag the marker to position"
-      inputs_html = methods.inject('') {|html, method| html << input(method, :as => :hidden)}
+      inputs_html = methods.inject('') {|html, method| html << input(method, :id => map_input_id(method), :as => :hidden)}
       hint_html = inline_hints_for(methods.first, options)
       map_container = @template.content_tag(:div, nil, :class => 'map', :id => map_div_id(methods))
       map_html = @template.content_tag(:li,  Formtastic::Util.html_safe("#{map_container} #{hint_html.to_s} #{options[:skip_js] == true ? '' : map_js(methods).to_s}"))
