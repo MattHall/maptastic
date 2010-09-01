@@ -14,65 +14,26 @@ module Maptastic
   private
     
     def map_div_id(methods)
-      methods.map(&:to_s).join('_') << '_map'
+      generate_html_id(methods.map(&:to_s).join('_') << '_map')
     end
     
     def map_input_id(method)
       generate_html_id("map_#{method}")
     end
     
+    def js_class_name(methods)
+      "Maptastic#{map_input_id(methods.map(&:to_s).join('_')).camelize}"
+    end
+    
     def map_js(methods)
       @template.content_tag("script", :lang => "javascript") do
-      "
-        function create_marker(map, location) {
-          marker = new google.maps.Marker({
-            position: location, 
-            map: map,
-            title:'Drag to reposition',
-            draggable: true
-          });
-          
-          google.maps.event.addListener(marker, 'dragend', function(event){
-            document.getElementById('#{map_input_id(methods.first)}').value = event.latLng.lat();
-            document.getElementById('#{map_input_id(methods.last)}').value = event.latLng.lng();
-          });
-        }
-      
-        function init_#{map_div_id(methods)}() {
-          var myOptions = {
-            zoom: 6,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          };
-          
-          map = new google.maps.Map(document.getElementById('#{map_div_id(methods)}'), myOptions);
-          
-          if (document.getElementById('#{map_input_id(methods.first)}').value && document.getElementById('#{map_input_id(methods.last)}').value) {
-            var location = new google.maps.LatLng(document.getElementById('#{map_input_id(methods.first)}').value, document.getElementById('#{map_input_id(methods.last)}').value);
-            map.setCenter(location);
-            create_marker(map, location);
-          } else {
-            if(navigator.geolocation) {
-                browserSupportFlag = true;
-                navigator.geolocation.getCurrentPosition(function(position) {
-                  initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-                  map.setCenter(initialLocation);
-                }
-              );
-            }
-            
-            click_listener = google.maps.event.addListener(map, 'click', function(event){
-              create_marker(map, event.latLng);
-              
-              document.getElementById('#{map_input_id(methods.first)}').value = location.lat();
-              document.getElementById('#{map_input_id(methods.last)}').value = location.lng();
-              
-              google.maps.event.removeListener(click_listener);
-            });
-          }
-        }
-        
-        init_#{map_div_id(methods)}();
         "
+MaptasticMap.init({
+  mapId: '#{map_div_id(methods)}',
+  latInput: '#{map_input_id(methods.first)}', 
+  lngInput: '#{map_input_id(methods.last)}'
+});
+"
       end
     end
     
