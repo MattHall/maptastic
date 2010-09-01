@@ -1,4 +1,7 @@
-MaptasticMap = {
+MaptasticMap = function(options) {
+	this.init(options);
+}
+MaptasticMap.prototype = {
 	marker: null,
 	options: { mapId: null, latitudeInput: null, longitudeInput: null }, // default options
 	setMarker: function(map, location) {

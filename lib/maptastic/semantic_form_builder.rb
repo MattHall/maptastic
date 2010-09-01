@@ -24,7 +24,7 @@ module Maptastic
     def map_js(methods)
       @template.content_tag("script", :lang => "javascript") do
         "
-MaptasticMap.init({
+new MaptasticMap({
   mapId: '#{map_div_id(methods)}',
   latInput: '#{map_input_id(methods.first)}', 
   lngInput: '#{map_input_id(methods.last)}'
