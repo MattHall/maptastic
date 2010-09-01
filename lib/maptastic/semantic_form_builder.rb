@@ -20,11 +20,7 @@ module Maptastic
     def map_input_id(method)
       generate_html_id("map_#{method}")
     end
-    
-    def js_class_name(methods)
-      "Maptastic#{map_input_id(methods.map(&:to_s).join('_')).camelize}"
-    end
-    
+
     def map_js(methods)
       @template.content_tag("script", :lang => "javascript") do
         "
