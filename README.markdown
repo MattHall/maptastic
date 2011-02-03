@@ -8,9 +8,17 @@ Next, install Maptastic as a plugin:
 
     script/plugin install git@github.com:MattHall/maptastic.git
 
-...and run the ake task to install the required js file into your javascripts directory. You will probably need to include this in your layouts, too.
+...and run the rake task to install the required js file into your javascripts directory. You will probably need to include this in your layouts, too.
 
-    rake maptastic:install
+		    rake maptastic_form:install
+		
+You can alternatively install the gem:
+
+    gem install maptastic-form
+
+Note if you're using the gem, then you'll need to copy the JS asset from:
+
+    https://github.com/MattHall/maptastic/blob/master/assets/javascripts/maptastic.js
 
 You'll need to add the [Google Maps **V3**][3] script include in your page, above your semantic_form:
 

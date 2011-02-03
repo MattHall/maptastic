@@ -1,4 +1,4 @@
-module Maptastic
+module MaptasticForm
   class SemanticFormBuilder < Formtastic::SemanticFormBuilder
     
     def multi_input(*args)
